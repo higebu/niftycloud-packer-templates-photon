@@ -1,0 +1,79 @@
+{
+  "variables": {
+    "iso_file": "http://photon.hgb.jp/iso/photon.iso",
+    "iso_checksum_value": "0b03b16f1c234bb0752138da2a781d5588f58a37",
+    "product_name": "Photon",
+    "product_version": "1.0",
+    "headless": "true",
+    "disk_size": "30720",
+    "ssh_password": "niftycloud",
+    "ssh_wait_timeout": "5m",
+    "shutdown_command": "shutdown -h now"
+  },
+  "builders": [
+    {
+      "vm_name": "photon",
+      "vmdk_name": "photon-disk0",
+      "type": "vmware-iso",
+      "headless": "{{user `headless`}}",
+      "disk_size": "{{user `disk_size`}}",
+      "disk_type_id": 0,
+      "guest_os_type": "other3xlinux-64",
+      "iso_url": "{{user `iso_file`}}",
+      "iso_checksum": "{{user `iso_checksum_value`}}",
+      "iso_checksum_type": "sha1",
+      "ssh_username": "root",
+      "ssh_password": "{{user `ssh_password`}}",
+      "ssh_wait_timeout": "{{user `ssh_wait_timeout`}}",
+      "shutdown_command": "shutdown -h now",
+      "http_directory": ".",
+      "vmx_data": {
+        "cpuid.coresPerSocket": "1",
+        "memsize": "512",
+        "numvcpus": "1",
+        "virtualhw.version": "8",
+        "ethernet0.present": "TRUE",
+        "ethernet0.startConnected": "TRUE",
+        "ethernet0.virtualDev": "vmxnet3",
+        "ethernet0.connectionType": "nat",
+        "ethernet1.present": "TRUE",
+        "ethernet1.startConnected": "TRUE",
+        "ethernet1.virtualDev": "vmxnet3",
+        "ethernet1.connectionType": "nat"
+      },
+      "boot_command": [
+        "<enter>",
+        "<wait5><enter><enter><enter>",
+        "<enter><wait>",
+        "photon<enter><wait>",
+        "{{user `ssh_password`}}<enter>",
+        "<wait10><wait10><wait10>",
+        "<enter>",
+        "<wait10><wait10><wait10>",
+        "root<enter><wait>{{user `ssh_password`}}<enter><wait>",
+        "mount /dev/cdrom /media/cdrom<enter><wait>",
+        "tdnf install -y sed<enter><wait5>",
+        "sed -i -e 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config<enter><wait>",
+        "ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa<enter><wait>",
+        "ssh-keygen -f /etc/ssh/ssh_host_dsa_key -N '' -t dsa<enter><wait>",
+        "ssh-keygen -f /etc/ssh/ssh_host_ecdsa_key -N '' -t ecdsa<enter><wait>",
+        "ssh-keygen -f /etc/ssh/ssh_host_ed25519_key -N '' -t ed25519<enter><wait>",
+        "systemctl restart sshd.service<enter>",
+        "<wait5>"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "scripts/photon-docker.service",
+      "destination": "/lib/systemd/system/docker.service"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/photon-provisioning.sh"
+    }
+  ],
+  "post-processors": [
+  ]
+}
