@@ -1,7 +1,7 @@
 {
   "variables": {
     "iso_file": "http://photon.hgb.jp/iso/photon.iso",
-    "iso_checksum_value": "0b03b16f1c234bb0752138da2a781d5588f58a37",
+    "iso_checksum_value": "c6afc3109e9db3b243d55e39253224757025829c",
     "product_name": "Photon",
     "product_version": "1.0",
     "headless": "true",
@@ -54,10 +54,7 @@
         "mount /dev/cdrom /media/cdrom<enter><wait>",
         "tdnf install -y sed<enter><wait5>",
         "sed -i -e 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config<enter><wait>",
-        "ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa<enter><wait>",
-        "ssh-keygen -f /etc/ssh/ssh_host_dsa_key -N '' -t dsa<enter><wait>",
-        "ssh-keygen -f /etc/ssh/ssh_host_ecdsa_key -N '' -t ecdsa<enter><wait>",
-        "ssh-keygen -f /etc/ssh/ssh_host_ed25519_key -N '' -t ed25519<enter><wait>",
+        "ssh-keygen -A<enter><wait>",
         "systemctl restart sshd.service<enter>",
         "<wait5>"
       ]

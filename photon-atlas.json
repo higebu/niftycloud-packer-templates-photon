@@ -1,7 +1,7 @@
 {
   "variables": {
     "iso_file": "http://photon.hgb.jp/iso/photon.iso",
-    "iso_checksum_value": "b44338c14a3dde292ede67345d8a6294d486f911",
+    "iso_checksum_value": "e68c21cf9b331ee30fc585cade0a70b7c10376f1",
     "product_name": "Photon",
     "product_version": "1.0",
     "headless": "true",
