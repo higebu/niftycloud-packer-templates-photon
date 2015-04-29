@@ -2,7 +2,7 @@
 
 # Install packages
 mount /dev/cdrom /media/cdrom
-for p in binutils cpio docker file findutils grep gzip niftycloud-init open-vm-tools tzdata; do
+for p in binutils cpio docker file findutils grep gzip niftycloud-init tzdata; do
     tdnf install -y $p
 done
 
